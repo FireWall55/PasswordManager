@@ -36,7 +36,7 @@ def search(ans):
     ans = str(ans)
     with open("passwords.txt", "r") as file: #opens text file
         for line in file.readlines(): #loops through lines (different passwords for sites)
-            if(str(line.lower()).find(ans.lower()) != -1): #if the site searched for is found in the file
+            if(str(line.lower()).find(ans.lower()) != -1): #if the site searched for is found in the line
                 data = line.rstrip()
                 site, user, passw = data.split("|")
                 print("Site/App:", site, "User:", user + ", Password:", fer.decrypt(passw.encode()).decode())
@@ -44,10 +44,27 @@ def search(ans):
                 break
         if not found:
             print("Site/app not found in the file")
+            
+def delete(ans):
+    i = 0
+    ans = str(ans)
+    with open("passwords.txt", "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            if(str(line.lower()).find(ans.lower()) != -1): #if the site searched for is found in the line
+                del lines[i]
+                break
+            else:
+                i += 1
+        with open("passwords.txt", "w") as nfile:
+            for line in lines:
+                nfile.write(str(line))
+        print("done")
+    
         
 
 while True:
-    mode = input("Would you like to add a new password, view existing ones, or search by site? (view, add, search), press q to quit: ").lower()
+    mode = input("Would you like to add a new password, view existing ones, search by site, or delete a site password? (view, add, search, delete), press q to quit: ").lower()
     if mode == "q":
         break
     
@@ -58,6 +75,9 @@ while True:
     elif mode == "search":
         ans = input("What site/app would you like to search for? ")
         search(ans)
+    elif mode == "delete":
+        ans = input("What site do you want to delete the password of? ")
+        delete(ans)
     else:
         print("Invalid mode.")
         continue
